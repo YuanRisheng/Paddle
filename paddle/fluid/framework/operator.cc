@@ -1320,12 +1320,48 @@ static pt::KernelName ConstructPtKernelName(const std::string& op_type,
   return pt::KernelName(op_type, overload_name);
 }
 
+static pt::KernelName ConstructPtKernelNameFromCtx(const RuntimeContext& ctx,
+                                                   const std::string& op_type,
+                                                   proto::OpProto* op_proto) {
+  std::string overload_name;
+  paddle::imperative::KernelArgsNameMakerByOpProto<Variable> argMaker(
+      op_proto, &ctx.inputs, &ctx.outputs);
+
+  auto& input_names = argMaker.GetInputArgsNames();
+  auto& output_names = argMaker.GetOutputArgsNames();
+
+  for (size_t i = 0; i < input_names.size(); ++i) {
+    if (!IsValidVar(input_names[i], ctx.inputs)) {
+      continue;
+    }
+    auto ins_vector = ctx.inputs.at(input_names[i]);
+    for (auto var : ins_vector) {
+      if ((*var).template IsType<framework::LoDTensor>()) {
+        overload_name += std::string(typeid(pt::DenseTensor&).name());
+      }
+    }
+  }
+
+  for (size_t i = 0; i < output_names.size(); ++i) {
+    if (!IsValidVar(output_names[i], ctx.outputs)) {
+      continue;
+    }
+    auto outs_vector = ctx.outputs.at(output_names[i]);
+    for (auto var : outs_vector) {
+      if ((*var).template IsType<framework::LoDTensor>()) {
+        overload_name += std::string(typeid(pt::DenseTensor*).name());
+      }
+    }
+  }
+
+  return pt::KernelName(op_type, overload_name);
+}
+
 void OperatorWithKernel::ChoosePtKernel(
     const RuntimeContext& ctx, const platform::DeviceContext& dev_ctx) const {
   // 1. construct operation name
   // TODO(chenweihang): add rules for construct op name
-  auto kernel_name =
-      ConstructPtKernelName(Type(), *(Info().proto_), ctx.inputs, ctx.outputs);
+  auto kernel_name = ConstructPtKernelNameFromCtx(ctx, Type(), Info().proto_);
 
   // 2. construct op kernel key
   pt_kernel_key_.reset(new pt::KernelKey(

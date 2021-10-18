@@ -69,7 +69,7 @@ PT_REGISTER_KERNEL("flatten_contiguous_range",
                    int,
                    int64_t) {}
 
-PT_REGISTER_KERNEL("flatten_contiguous_range.mid",
+PT_REGISTER_KERNEL("flatten_contiguous_range",
                    CPU,
                    NCHW,
                    pt::FlattenWithXShape,

@@ -33,6 +33,13 @@ void Flatten(const CUDAContext& dev_ctx,
              int stop_axis,
              DenseTensor* out);
 
+template <typename T>
+void FlattenWithXShape(const CUDAContext& dev_ctx,
+                       const DenseTensor& x,
+                       int start_axis,
+                       int stop_axis,
+                       DenseTensor* out,
+                       DenseTensor* xshape);
 }  // namespace pt
 
 #endif

@@ -31,7 +31,11 @@ namespace experimental {
 
 Tensor dot(const Tensor& x, const Tensor& y) {
   // 1. Get kernel signature and kernel
-  auto kernel_signature = ParseKernelNameAndKeyByArgs("dot", x);
+  std::string kernel_name = "dot";
+  std::string overload_name =
+      pt::KernelFactory::Instance().FuncNameMap()["pt::Dot"];
+  auto kernel_signature =
+      ParseKernelNameAndKeyByArgs(kernel_name, overload_name, x);
   VLOG(1) << kernel_signature.first;
   VLOG(1) << kernel_signature.second;
   VLOG(1) << pt::KernelFactory::Instance();

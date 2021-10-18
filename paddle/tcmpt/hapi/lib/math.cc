@@ -28,7 +28,11 @@ namespace experimental {
 
 Tensor mean(const Tensor& x) {
   // 1. Get kernel signature and kernel
-  auto kernel_signature = ParseKernelNameAndKeyByArgs("mean", x);
+  std::string kernel_name = "mean";
+  std::string overload_name =
+      pt::KernelFactory::Instance().FuncNameMap()["pt::Mean"];
+  auto kernel_signature =
+      ParseKernelNameAndKeyByArgs(kernel_name, overload_name, x);
   VLOG(1) << kernel_signature.first;
   VLOG(1) << kernel_signature.second;
   VLOG(1) << pt::KernelFactory::Instance();

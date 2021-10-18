@@ -272,6 +272,10 @@ class KernelFactory {
 
   KernelMap& kernels() { return kernels_; }
 
+  std::unordered_map<std::string, std::string>& FuncNameMap() {
+    return func_name_map_;
+  }
+
   bool ContainsKernel(const char* name) const;
 
   const Kernel& SelectKernelOrThrowError(const KernelName& kernel_name,
@@ -289,6 +293,9 @@ class KernelFactory {
   KernelFactory() = default;
 
   KernelMap kernels_;
+
+  // The map between overloaded kernel function and kernel name
+  std::unordered_map<std::string, std::string> func_name_map_;
 };
 
 /** operator << overload **/

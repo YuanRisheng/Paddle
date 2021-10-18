@@ -98,11 +98,13 @@ struct KernelNameAndKeyParser : ArgsIterator<KernelNameAndKeyParser> {
 // and the `host` suffix should be added on the basis of the function name.
 template <typename... Args>
 std::pair<pt::KernelName, pt::KernelKey> ParseKernelNameAndKeyByArgs(
-    const std::string& fn_name, const Args&... args) {
+    const std::string& fn_name,
+    const std::string& overload_name,
+    const Args&... args) {
   auto parser = detail::KernelNameAndKeyParser(fn_name);
   parser(args...);
   // TODO(chenweihang): polish design here
-  pt::KernelName kernel_name(parser.kernel_name);
+  pt::KernelName kernel_name(fn_name, overload_name);
   pt::KernelKey kernel_key(parser.backend, parser.layout, parser.dtype);
   return std::make_pair(kernel_name, kernel_key);
 }

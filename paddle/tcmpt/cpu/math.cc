@@ -83,7 +83,7 @@ PT_REGISTER_KERNEL("scale",
                    int16_t,
                    int,
                    int64_t) {}
-PT_REGISTER_KERNEL("scale.host",
+PT_REGISTER_KERNEL("scale",
                    CPU,
                    NCHW,
                    pt::ScaleHost,

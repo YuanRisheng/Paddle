@@ -26,8 +26,11 @@ namespace experimental {
 
 Tensor flatten(const Tensor& x, int start_axis, int stop_axis) {
   // 1. Get kernel signature and kernel
+  std::string kernel_name = "flatten_contiguous_range";
+  std::string overload_name =
+      pt::KernelFactory::Instance().FuncNameMap()["pt::Flatten"];
   auto kernel_signature =
-      ParseKernelNameAndKeyByArgs("flatten_contiguous_range", x);
+      ParseKernelNameAndKeyByArgs(kernel_name, overload_name, x);
   VLOG(1) << kernel_signature.first;
   VLOG(1) << kernel_signature.second;
   VLOG(1) << pt::KernelFactory::Instance();

@@ -27,7 +27,11 @@ namespace experimental {
 
 Tensor full_like(const Tensor& x, const pt::Scalar& value, pt::DataType dtype) {
   // 1. Get kernel signature and kernel
-  auto kernel_signature = ParseKernelNameAndKeyByArgs("fill_any_like", x);
+  std::string kernel_name = "fill_any_like";
+  std::string overload_name =
+      pt::KernelFactory::Instance().FuncNameMap()["pt::FillAnyLike"];
+  auto kernel_signature =
+      ParseKernelNameAndKeyByArgs(kernel_name, overload_name, x);
   VLOG(1) << kernel_signature.first;
   VLOG(1) << kernel_signature.second;
   VLOG(1) << pt::KernelFactory::Instance();

@@ -24,8 +24,10 @@ class KernelContext;
 using KernelFn = void (*)(KernelContext* ctx);
 using KernelArgsDefFn = void (*)(Kernel* kernel);
 using KernelArgsParseFn = void (*)(const KernelKey& default_key,
-                                   KernelArgsDef* args_def);
+                                   KernelArgsDef* args_def,
+                                   std::string* overload_name);
 
+using KernelOverloadNameParseFn = void (*)(std::string* overload_name);
 // Multiple kernels of the same operation are distinguished by the difference
 // of the overload name. For the convenience of reuse, we define some overload
 // naming strings for the naming of the kernel

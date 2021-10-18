@@ -167,6 +167,44 @@ static pt::KernelName ConstructPtKernelName(
 }
 
 template <typename VarType>
+static pt::KernelName ConstructPtKernelNameFromCtx(
+    const std::string& op_type, framework::proto::OpProto* op_proto,
+    const NameVarMap<VarType>& inputs, const NameVarMap<VarType>& outputs) {
+  std::string overload_name;
+  paddle::imperative::KernelArgsNameMakerByOpProto<VarType> argMaker(
+      op_proto, &inputs, &outputs);
+
+  auto& input_names = argMaker.GetInputArgsNames();
+  auto& output_names = argMaker.GetOutputArgsNames();
+
+  for (size_t i = 0; i < input_names.size(); ++i) {
+    if (!IsValidVar<VarType>(input_names[i], inputs)) {
+      continue;
+    }
+    auto ins_vector = inputs.at(input_names[i]);
+    for (auto var : ins_vector) {
+      if (var->Var().template IsType<framework::LoDTensor>()) {
+        overload_name += std::string(typeid(pt::DenseTensor&).name());
+      }
+    }
+  }
+
+  for (size_t i = 0; i < output_names.size(); ++i) {
+    if (!IsValidVar<VarType>(output_names[i], outputs)) {
+      continue;
+    }
+    auto outs_vector = outputs.at(output_names[i]);
+    for (auto var : outs_vector) {
+      if (var->Var().template IsType<framework::LoDTensor>()) {
+        overload_name += std::string(typeid(pt::DenseTensor*).name());
+      }
+    }
+  }
+
+  return pt::KernelName(op_type, overload_name);
+}
+
+template <typename VarType>
 PreparedOp PrepareImpl(const NameVarMap<VarType>& ins,
                        const NameVarMap<VarType>& outs,
                        const framework::OperatorWithKernel& op,
@@ -194,8 +232,8 @@ PreparedOp PrepareImpl(const NameVarMap<VarType>& ins,
   // 1. get expected kernel key
   if (FLAGS_use_pt_kernel &&
       pt::KernelFactory::Instance().ContainsKernel(op.Type().c_str())) {
-    auto kernel_name =
-        ConstructPtKernelName<VarType>(op.Type(), (*op.Info().proto_), ins);
+    auto kernel_name = ConstructPtKernelNameFromCtx<VarType>(
+        op.Type(), op.Info().proto_, ins, outs);
     auto inputs = BuildInputMap<VarType>(ins);
     // we only need attrs here
     // auto final_attrs = BuildAttrMap(attrs, default_attrs);
