@@ -12,38 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "paddle/tcmpt/cuda/linalg.h"
+#include "paddle/tcmpt/kernels/cpu/creation.h"
 
 #include "paddle/tcmpt/core/kernel_registry.h"
-#include "paddle/tcmpt/eigen/dot.h"
-
-// See Note [ Why still include the fluid headers? ]
-#include "paddle/fluid/platform/complex.h"
+#include "paddle/tcmpt/kernels/common/eigen/fill.h"
 
 namespace pt {
 
 template <typename T>
-void Dot(const CUDAContext& dev_ctx,
-         const DenseTensor& x,
-         const DenseTensor& y,
-         DenseTensor* out) {
-  eigen::Dot<CUDAContext, T>(dev_ctx, x, y, out);
+void FillAnyLike(const CPUContext& dev_ctx,
+                 const DenseTensor& x,
+                 const Scalar& val,
+                 DenseTensor* out) {
+  eigen::fill<CPUContext, T>(dev_ctx, out, val.to<float>());
 }
 
 }  // namespace pt
 
-PT_REGISTER_MODULE(LinalgCUDA);
+PT_REGISTER_MODULE(CreationCPU);
 
-using complex64 = ::paddle::platform::complex<float>;
-using complex128 = ::paddle::platform::complex<double>;
-
-PT_REGISTER_KERNEL("dot",
-                   CUDA,
-                   NCHW,
-                   pt::Dot,
+PT_REGISTER_KERNEL("fill_any_like",
+                   CPU,
+                   Any,
+                   pt::FillAnyLike,
                    float,
                    double,
                    int,
                    int64_t,
-                   complex64,
-                   complex128) {}
+                   bool,
+                   paddle::platform::float16) {}

@@ -12,11 +12,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. */
 
-#include "paddle/tcmpt/cuda/math.h"
+#include "paddle/tcmpt/kernels/cuda/math.h"
 
-#include "paddle/tcmpt/eigen/mean.h"
-#include "paddle/tcmpt/eigen/scale.h"
-#include "paddle/tcmpt/eigen/sign.h"
+#include "paddle/tcmpt/kernels/common/eigen/mean.h"
+#include "paddle/tcmpt/kernels/common/eigen/scale.h"
+#include "paddle/tcmpt/kernels/common/eigen/sign.h"
 
 #ifdef __NVCC__
 #include "cub/cub.cuh"
@@ -121,11 +121,11 @@ void ScaleHost(const CUDAContext& dev_ctx,
 PT_REGISTER_MODULE(MathCUDA);
 
 using float16 = paddle::platform::float16;
-PT_REGISTER_KERNEL("sign", CUDA, NCHW, pt::Sign, float, double, float16) {}
-PT_REGISTER_KERNEL("mean", CUDA, NCHW, pt::Mean, float, double, float16) {}
+PT_REGISTER_KERNEL("sign", CUDA, Any, pt::Sign, float, double, float16) {}
+PT_REGISTER_KERNEL("mean", CUDA, Any, pt::Mean, float, double, float16) {}
 PT_REGISTER_KERNEL("scale",
                    CUDA,
-                   NCHW,
+                   Any,
                    pt::Scale,
                    float,
                    double,
@@ -137,7 +137,7 @@ PT_REGISTER_KERNEL("scale",
                    int64_t) {}
 PT_REGISTER_KERNEL("scale.host",
                    CUDA,
-                   NCHW,
+                   Any,
                    pt::ScaleHost,
                    float,
                    double,

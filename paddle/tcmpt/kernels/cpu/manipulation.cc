@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "paddle/tcmpt/cpu/manipulation.h"
-#include "paddle/tcmpt/cpu/utils.h"
+#include "paddle/tcmpt/kernels/cpu/manipulation.h"
 #include "paddle/tcmpt/infershape/unary.h"
+#include "paddle/tcmpt/kernels/cpu/utils.h"
 
 namespace pt {
 
@@ -60,7 +60,7 @@ PT_REGISTER_MODULE(ManipulationCPU);
 // architecture, kernel_name should be "flatten".
 PT_REGISTER_KERNEL("flatten_contiguous_range",
                    CPU,
-                   NCHW,
+                   Any,
                    pt::Flatten,
                    float,
                    double,
@@ -71,7 +71,7 @@ PT_REGISTER_KERNEL("flatten_contiguous_range",
 
 PT_REGISTER_KERNEL("flatten_contiguous_range",
                    CPU,
-                   NCHW,
+                   Any,
                    pt::FlattenWithXShape,
                    float,
                    double,
