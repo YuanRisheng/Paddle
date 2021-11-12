@@ -14,13 +14,21 @@ limitations under the License. */
 
 #pragma once
 
-#include "paddle/pten/api/include/tensor.h"
+#include "paddle/pten/core/dense_tensor.h"
 
-namespace paddle {
-namespace experimental {
+namespace pten {
+namespace general {
 
-Tensor flatten(const Tensor& x, int start_axis, int stop_axis);
+inline void SetXShape(const DenseTensor& x, DenseTensor* xshape) {
+  const auto& in_dims = x.meta().dims;
+  std::vector<int64_t> xshape_dims(in_dims.size() + 1);
+  xshape_dims[0] = 0;
+  for (int i = 0; i < in_dims.size(); ++i) {
+    xshape_dims[i + 1] = in_dims[i];
+  }
+  xshape->Resize(paddle::framework::make_ddim(xshape_dims));
+  xshape->set_lod(x.meta().lod);
+}
 
-Tensor reshape(const Tensor& x, const std::vector<int>& shape);
-}  // namespace experimental
-}  // namespace paddle
+}  // namespace general
+}  // namespace pten
