@@ -150,3 +150,4 @@ cc_library(sparse_api SRCS ${sparse_api_source_file} DEPS phi_tensor_raw phi ker
 cc_library(sparse_bw_api SRCS ${sparse_bw_api_source_file} DEPS phi_tensor_raw phi kernel_dispatch api_gen_utils sparse_api sparse_api_custom_impl)
 
 cc_library(phi_tensor SRCS tensor_method.cc DEPS phi_tensor_raw phi_function_api api_gen_utils kernel_dispatch infermeta)
+cc_library(api_scalar SRCS scalar.cc DEPS phi_tensor)
