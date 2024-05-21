@@ -148,7 +148,7 @@ void FindAbsMaxFunctor<Context, T>::operator()(const Context &ctx,
   grid = (grid > block) ? block : grid;
 
   DenseTensor max;
-  max.Resize(common::make_ddim({grid}));
+  max.Resize(phi::make_ddim({grid}));
   T *max_data = ctx.template Alloc<T>(&max);
   FindAbsMaxKernel<T>
       <<<grid, block, 1024 * sizeof(T), ctx.stream()>>>(in, num, max_data);

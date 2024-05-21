@@ -698,6 +698,20 @@ void FusedConvInferMeta(const MetaTensor& input,
                         MetaTensor* out,
                         MetaConfig config);
 
+void FakeQuantOrWithDequantMovingAverageAbsMaxInferMeta(
+    const MetaTensor& x,
+    const MetaTensor& in_scale,
+    const MetaTensor& in_accum,
+    const MetaTensor& in_state,
+    float moving_rate,
+    int bit_length,
+    bool is_test,
+    int round_type,
+    MetaTensor* out,
+    MetaTensor* out_scale,
+    MetaTensor* out_state,
+    MetaTensor* out_accum);
+
 void MoeInferMeta(const MetaTensor& x,
                   const MetaTensor& gate,
                   const MetaTensor& bmm0,

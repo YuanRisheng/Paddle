@@ -849,7 +849,6 @@
     func : expm1
   inplace: (x -> out)
   backward : expm1_grad
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : fake_channel_wise_quantize_abs_max
   args : (Tensor x, int bit_length = 8, int round_type = 1, int quant_axis = 0, bool is_test = false)
