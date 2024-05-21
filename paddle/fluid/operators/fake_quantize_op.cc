@@ -333,18 +333,6 @@ namespace ops = paddle::operators;
 using CPU = phi::CPUContext;
 
 REGISTER_OPERATOR(
-    fake_quantize_abs_max,
-    ops::FakeQuantOrWithDequantAbsMaxOp,
-    ops::FakeQuantOrWithDequantAbsMaxOpMaker,
-    paddle::framework::EmptyGradOpMaker<paddle::framework::OpDesc>,
-    paddle::framework::EmptyGradOpMaker<paddle::imperative::OpBase>);
-PD_REGISTER_STRUCT_KERNEL(fake_quantize_abs_max,
-                          CPU,
-                          ALL_LAYOUT,
-                          ops::FakeQuantizeAbsMaxKernel,
-                          float) {}
-
-REGISTER_OPERATOR(
     fake_quantize_dequantize_abs_max,
     ops::FakeQuantOrWithDequantAbsMaxOp,
     ops::FakeQuantOrWithDequantAbsMaxOpMaker,
@@ -354,18 +342,6 @@ PD_REGISTER_STRUCT_KERNEL(fake_quantize_dequantize_abs_max,
                           CPU,
                           ALL_LAYOUT,
                           ops::FakeQuantizeDequantizeAbsMaxKernel,
-                          float) {}
-
-REGISTER_OPERATOR(
-    fake_quantize_range_abs_max,
-    ops::FakeQuantizeRangeAbsMaxOp,
-    ops::FakeQuantizeRangeAbsMaxOpMaker,
-    paddle::framework::EmptyGradOpMaker<paddle::framework::OpDesc>,
-    paddle::framework::EmptyGradOpMaker<paddle::imperative::OpBase>);
-PD_REGISTER_STRUCT_KERNEL(fake_quantize_range_abs_max,
-                          CPU,
-                          ALL_LAYOUT,
-                          ops::FakeQuantizeRangeAbsMaxKernel,
                           float) {}
 
 REGISTER_OPERATOR(

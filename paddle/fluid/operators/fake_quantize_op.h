@@ -23,6 +23,7 @@ limitations under the License. */
 #include "paddle/phi/common/transform.h"
 #include "paddle/phi/core/hostdevice.h"
 #include "paddle/phi/kernels/funcs/blas/blas.h"
+#include "paddle/phi/kernels/funcs/fake_quantize_functor.h"
 
 namespace paddle {
 namespace operators {
@@ -192,14 +193,15 @@ class FakeMovingAverageAbsMaxKernelBase : public framework::OpKernel<T> {
     out_scale->mutable_data<T>(context.GetPlace());
     float moving_rate = context.Attr<float>("moving_rate");
 
-    FindMovingAverageAbsMaxFunctor<DeviceContext, T>()(dev_ctx,
-                                                       *in_accum,
-                                                       *in_state,
-                                                       cur_scale_data,
-                                                       moving_rate,
-                                                       out_state,
-                                                       out_accum,
-                                                       out_scale);
+    phi::funcs::FindMovingAverageAbsMaxFunctor<DeviceContext, T>()(
+        dev_ctx,
+        *in_accum,
+        *in_state,
+        cur_scale_data,
+        moving_rate,
+        out_state,
+        out_accum,
+        out_scale);
 
     RunClipFunctor(dev_ctx, *in, *out_scale, bin_cnt, round_type, out);
   }
@@ -282,14 +284,15 @@ class MovingAverageAbsMaxScaleKernel : public framework::OpKernel<T> {
     out_scale->mutable_data<T>(context.GetPlace());
     float moving_rate = context.Attr<float>("moving_rate");
 
-    FindMovingAverageAbsMaxFunctor<DeviceContext, T>()(dev_ctx,
-                                                       *in_accum,
-                                                       *in_state,
-                                                       cur_scale_data,
-                                                       moving_rate,
-                                                       out_state,
-                                                       out_accum,
-                                                       out_scale);
+    phi::funcs::FindMovingAverageAbsMaxFunctor<DeviceContext, T>()(
+        dev_ctx,
+        *in_accum,
+        *in_state,
+        cur_scale_data,
+        moving_rate,
+        out_state,
+        out_accum,
+        out_scale);
   }
 };
 

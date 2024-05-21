@@ -13,11 +13,11 @@ limitations under the License. */
 #include <string>
 #include <vector>
 
-#include "paddle/common/ddim.h"
 #include "paddle/fluid/framework/op_registry.h"
 #include "paddle/fluid/framework/op_version_registry.h"
 #include "paddle/fluid/operators/quantize_linear_op.h"
 #include "paddle/phi/common/transform.h"
+#include "paddle/phi/core/ddim.h"
 #include "paddle/phi/kernels/funcs/blas/blas.h"
 #include "paddle/phi/kernels/impl/clip_kernel_impl.h"
 

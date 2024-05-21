@@ -18,9 +18,9 @@
 
 #include "paddle/phi/kernels/quantize_linear_kernel.h"
 
-#include "paddle/common/hostdevice.h"
 #include "paddle/phi/backends/gpu/gpu_launch_config.h"
 #include "paddle/phi/common/place.h"
+#include "paddle/phi/core/hostdevice.h"
 #include "paddle/phi/core/tensor_utils.h"
 #include "paddle/phi/kernels/cast_kernel.h"
 #include "paddle/phi/kernels/funcs/fake_quantize_functor.h"
@@ -159,7 +159,7 @@ void QuantizeLinearKernel(const Context& dev_ctx,
     if (!is_test) {
       // training
       phi::DenseTensor tmp_scale;
-      tmp_scale.Resize(common::make_dim(1));
+      tmp_scale.Resize(phi::make_dim(1));
       T* cur_scale_data = dev_ctx.template Alloc<T>(&tmp_scale);
 
       phi::funcs::FindAbsMaxFunctor<Context, T>()(

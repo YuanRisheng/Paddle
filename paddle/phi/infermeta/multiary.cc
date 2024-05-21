@@ -3007,12 +3007,12 @@ void RAdamInferMeta(const MetaTensor& param,
                         moment2.dims()));
 
   auto lr_dim = learning_rate.dims();
-  PADDLE_ENFORCE_EQ(common::product(lr_dim),
+  PADDLE_ENFORCE_EQ(phi::product(lr_dim),
                     1,
                     phi::errors::InvalidArgument(
                         "Learning Rate of RAdamOp should be a scalar. But "
                         "received LearningRate's dim [%s]",
-                        common::product(lr_dim)));
+                        phi::product(lr_dim)));
 
   if (master_param.initialized()) {
     PADDLE_ENFORCE_EQ(param_dim,
@@ -3064,7 +3064,7 @@ void RmsNormInferMeta(const MetaTensor& x,
                       MetaTensor* out,
                       MetaTensor* residual_out,
                       MetaTensor* inv_var) {
-  std::vector<int64_t> x_dims_vec = common::vectorize(x.dims());
+  std::vector<int64_t> x_dims_vec = phi::vectorize(x.dims());
   auto x_dims_size = x_dims_vec.size();
 
   size_t normalized_dims = 1;
@@ -3086,7 +3086,7 @@ void RmsNormInferMeta(const MetaTensor& x,
                         normalized_dims,
                         norm_weight.dims()[0]));
 
-  auto out_dims = common::make_ddim(x_dims_vec);
+  auto out_dims = phi::make_ddim(x_dims_vec);
 
   out->set_dims(out_dims);
   if (quant_scale <= 0.0f) {
@@ -3099,7 +3099,7 @@ void RmsNormInferMeta(const MetaTensor& x,
 
   if (inv_var != nullptr) {
     inv_var->set_dtype(phi::DataType::FLOAT32);
-    inv_var->set_dims(common::make_ddim(inv_var_dims));
+    inv_var->set_dims(phi::make_ddim(inv_var_dims));
     inv_var->set_layout(x.layout());
   }
 
