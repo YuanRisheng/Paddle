@@ -70,11 +70,6 @@ class QuantTensorFunctor {
 };
 
 template <typename DeviceContext, typename T>
-struct FindAbsMaxFunctor {
-  void operator()(const DeviceContext &ctx, const T *in, const int num, T *out);
-};
-
-template <typename DeviceContext, typename T>
 struct ClipAndFakeQuantFunctor {
   void operator()(const DeviceContext &ctx,
                   const phi::DenseTensor &in,
@@ -109,7 +104,8 @@ class FakeAbsMaxKernelBase : public framework::OpKernel<T> {
 
     auto &dev_ctx = context.template device_context<DeviceContext>();
     const T *in_data = in->data<T>();
-    FindAbsMaxFunctor<DeviceContext, T>()(dev_ctx, in_data, in->numel(), out_s);
+    phi::funcs::FindAbsMaxFunctor<DeviceContext, T>()(
+        dev_ctx, in_data, in->numel(), out_s);
     RunClipFunctor(dev_ctx, *in, *out_scale, bin_cnt, round_type, out);
   }
 
@@ -182,7 +178,7 @@ class FakeMovingAverageAbsMaxKernelBase : public framework::OpKernel<T> {
     tmp_scale.Resize(phi::make_dim(1));
     T *cur_scale_data = dev_ctx.template Alloc<T>(&tmp_scale);
 
-    FindAbsMaxFunctor<DeviceContext, T>()(
+    phi::funcs::FindAbsMaxFunctor<DeviceContext, T>()(
         dev_ctx, in->data<T>(), in->numel(), cur_scale_data);
 
     auto *out_state = context.Output<phi::DenseTensor>("OutState");
@@ -273,7 +269,7 @@ class MovingAverageAbsMaxScaleKernel : public framework::OpKernel<T> {
     tmp_scale.Resize(phi::make_dim(1));
     T *cur_scale_data = dev_ctx.template Alloc<T>(&tmp_scale);
 
-    FindAbsMaxFunctor<DeviceContext, T>()(
+    phi::funcs::FindAbsMaxFunctor<DeviceContext, T>()(
         dev_ctx, in->data<T>(), in->numel(), cur_scale_data);
 
     auto *out_state = context.Output<phi::DenseTensor>("OutState");

@@ -345,18 +345,6 @@ PD_REGISTER_STRUCT_KERNEL(fake_quantize_dequantize_abs_max,
                           float) {}
 
 REGISTER_OPERATOR(
-    fake_quantize_moving_average_abs_max,
-    ops::FakeQuantOrWithDequantMovingAverageAbsMaxOp,
-    ops::FakeQuantOrWithDequantMovingAverageAbsMaxOpMaker,
-    paddle::framework::EmptyGradOpMaker<paddle::framework::OpDesc>,
-    paddle::framework::EmptyGradOpMaker<paddle::imperative::OpBase>);
-PD_REGISTER_STRUCT_KERNEL(fake_quantize_moving_average_abs_max,
-                          CPU,
-                          ALL_LAYOUT,
-                          ops::FakeQuantizeMovingAverageAbsMaxKernel,
-                          float) {}
-
-REGISTER_OPERATOR(
     fake_quantize_dequantize_moving_average_abs_max,
     ops::FakeQuantOrWithDequantMovingAverageAbsMaxOp,
     ops::FakeQuantOrWithDequantMovingAverageAbsMaxOpMaker,

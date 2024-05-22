@@ -73,7 +73,7 @@ class QuantizeLinearKernel : public framework::OpKernel<T> {
         tmp_scale.Resize(phi::make_dim(1));
         T* cur_scale_data = dev_ctx.template Alloc<T>(&tmp_scale);
 
-        FindAbsMaxFunctor<DeviceContext, T>()(
+        phi::funcs::FindAbsMaxFunctor<DeviceContext, T>()(
             dev_ctx, in->data<T>(), in->numel(), cur_scale_data);
 
         auto* out_state = context.Output<phi::DenseTensor>("OutState");
